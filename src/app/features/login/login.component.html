@@ -1,0 +1,28 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <div class="logo-container">
+      <img src="assets/logo.png" alt="Instruks Logo" />
+      <h1>Instruks</h1>
+    </div>
+
+    <h2 class="login-title">Login</h2>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" required />
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+
+      <mat-error *ngIf="loginError" class="error-text">Invalid credentials. Try again.</mat-error>
+    </form>
+  </mat-card>
+</div>
