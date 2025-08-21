@@ -10,11 +10,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-
-// Import components you'll actually use
-import { LoginComponent } from './features/login/login.component';
-import { CategoryListComponent } from './features/category-list/category-list.component';
-import { InstruksListComponent } from './features/instruks-list/instruks-list.component';
 import {JwtInterceptor} from "./core/jwt/jwt.interceptor";
 
 @NgModule({
@@ -32,7 +27,6 @@ import {JwtInterceptor} from "./core/jwt/jwt.interceptor";
     MatInputModule,
     MatCardModule,
     MatButtonModule,
-
     FeaturesModule
   ],
   providers: [

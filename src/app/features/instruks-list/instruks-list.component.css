@@ -1,0 +1,42 @@
+.instruks-card {
+  margin: 20px;
+  padding: 20px;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.editor-label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.editor {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  padding: 8px;
+  min-height: 200px;
+}
+
+mat-card-title {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-divider.divider {
+  margin: 24px 0;
+}

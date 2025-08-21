@@ -1,0 +1,28 @@
+﻿ngx-editor {
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  background: #fff;
+}
+
+ngx-editor .NgxEditor__MenuBar {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+}
+
+ngx-editor .NgxEditor__Content {
+  min-height: 200px;
+  padding: 4px;
+  outline: none;
+}
+
+ngx-editor .NgxEditor__MenuItem {
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+ngx-editor .NgxEditor__MenuItem.is-active {
+  font-weight: bold;
+}

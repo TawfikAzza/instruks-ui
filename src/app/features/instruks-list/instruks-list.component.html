@@ -1,1 +1,83 @@
-<p>instruks-list works!</p>
+<mat-card class="instruks-card">
+  <mat-card-title>Instruks Management</mat-card-title>
+  <mat-card-content>
+
+    <form (ngSubmit)="add()" class="form-section" autocomplete="off">
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="newInstruks.title" name="title" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput rows="2" [(ngModel)]="newInstruks.description" name="description"></textarea>
+        </mat-form-field>
+
+        <div id="editor-container"></div>
+
+
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="newInstruks.categoryId" name="categoryId">
+            <mat-option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit">Add Instruks</button>
+      </div>
+    </form>
+
+    <mat-divider class="divider"></mat-divider>
+
+    <table mat-table [dataSource]="instruksList" class="mat-elevation-z2">
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let i">
+          <ng-container *ngIf="editingInstruks?.id !== i.id">{{ i.title }}</ng-container>
+          <ng-container *ngIf="editingInstruks?.id === i.id && editingInstruks">
+            <input [(ngModel)]="editingInstruks.title" name="editTitle" />
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let i">
+          <ng-container *ngIf="editingInstruks?.id !== i.id">{{ i.description }}</ng-container>
+          <ng-container *ngIf="editingInstruks?.id === i.id && editingInstruks">
+            <input [(ngModel)]="editingInstruks.description" name="editDescription" />
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let i">
+          <ng-container *ngIf="editingInstruks?.id !== i.id">
+            <button mat-icon-button color="primary" (click)="edit(i)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="delete(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="editingInstruks?.id === i.id && editingInstruks">
+            <button mat-icon-button color="primary" (click)="saveEdit()">
+              <mat-icon>check</mat-icon>
+            </button>
+            <button mat-icon-button (click)="cancelEdit()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['title', 'description', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['title', 'description', 'actions']"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

@@ -34,7 +34,12 @@ export class LoginComponent {
     this.auth.login(email, password).subscribe({
       next: (res) => {
         this.auth.saveToken(res.token);
-        this.router.navigate(['/categories']);
+
+        // Delay routing to allow guard to see the new token
+        setTimeout(() => {
+          console.log('Logging in, navigating to categories');
+          this.router.navigate(['/categories']);
+        }, 0);
       },
       error: () => {
         this.loginError = true;

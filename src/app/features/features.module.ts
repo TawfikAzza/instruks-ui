@@ -2,33 +2,53 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 import { LoginComponent } from './login/login.component';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { InstruksListComponent } from './instruks-list/instruks-list.component';
+import {MatIconModule} from "@angular/material/icon";
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
     LoginComponent,
     CategoryListComponent,
-    InstruksListComponent
+    InstruksListComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-
-    // Angular Material modules
+    MatTableModule,
+    MatSortModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDividerModule
+  ],
+  exports: [
+    LoginComponent,
+    CategoryListComponent,
+    InstruksListComponent,
+    ConfirmDialogComponent // optional if not routed directly
   ]
 })
 export class FeaturesModule { }
