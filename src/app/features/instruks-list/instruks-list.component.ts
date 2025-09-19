@@ -1,126 +1,64 @@
-// instruks-list.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+
 import { InstruksService } from '../../core/instruks.service';
 import { Instruks } from '../../core/models/instruks.model';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { CategoryService } from '../../core/category.service';
-import { CategoryDto } from '../../core/models/category.model';
-import Quill from 'quill';
+
 @Component({
   selector: 'app-instruks-list',
   templateUrl: './instruks-list.component.html',
   styleUrls: ['./instruks-list.component.css']
 })
 export class InstruksListComponent implements OnInit, OnDestroy {
-  instruksList: Instruks[] = [];
-  categories: CategoryDto[] = [];
+  private destroy$ = new Subject<void>();
 
+  displayedColumns = ['title', 'categoryId', 'actions'];
+  dataSource = new MatTableDataSource<Instruks>([]);
 
-  newInstruks: Partial<Instruks> = {
-    title: '',
-    description: '',
-    content: '',
-    categoryId: ''
-  };
-
-  editingInstruks: Instruks | null = null;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
   constructor(
-    private service: InstruksService,
-    private categoryService: CategoryService,
-    private snackBar: MatSnackBar
+    private svc: InstruksService,
+    private snack: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadInstruks();
-    this.loadCategories();
+    this.load();
   }
-  ngAfterViewInit(): void {
-    const quill = new Quill('#editor-container', {
-      theme: 'snow',
-      placeholder: 'Write your instructions...',
-      modules: {
-        toolbar: [
-          [{ font: [] }, { size: ['small', false, 'large', 'huge'] }],  // Font family + size
-          ['bold', 'italic', 'underline', 'strike'],                   // Formatting
-          [{ color: [] }, { background: [] }],                         // Text color/background
-          [{ script: 'sub' }, { script: 'super' }],                    // Subscript/superscript
-          [{ header: 1 }, { header: 2 }, 'blockquote', 'code-block'],  // Headers, quotes, code
-          [{ list: 'ordered' }, { list: 'bullet' },                    // Lists
-            { indent: '-1' }, { indent: '+1' }],                         // Indentation
-          [{ direction: 'rtl' }, { align: [] }],                       // RTL + alignment
-          ['link', 'image', 'video'],                                  // Media
-          ['clean']                                                    // Remove formatting
-        ]
-      }
-    });
 
-    // Optional: Sync with Angular model
-    quill.on('text-change', () => {
-      this.newInstruks.content = quill.root.innerHTML;
+  load(): void {
+    this.svc.getAll()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: rows => {
+          this.dataSource = new MatTableDataSource(rows);
+          this.dataSource.sort = this.sort;
+        },
+        error: () => this.snack.open('Failed to load instruks', 'Close', { duration: 3000 })
+      });
+  }
+
+  edit(row: Instruks): void {
+    this.router.navigate(['/instruks/edit', row.id]); // row.id is GUID
+  }
+
+  delete(row: Instruks): void {
+    this.svc.delete(row.id).subscribe({
+      next: () => {
+        this.snack.open('Deleted', 'Close', { duration: 2000 });
+        this.load();
+      },
+      error: () => this.snack.open('Delete failed', 'Close', { duration: 3000 })
     });
   }
+
   ngOnDestroy(): void {
-
-  }
-
-  loadInstruks() {
-    this.service.getAll().subscribe({
-      next: data => this.instruksList = data,
-      error: () => this.snackBar.open('Failed to load instruks', 'Close', { duration: 3000 })
-    });
-  }
-
-  loadCategories() {
-    this.categoryService.getAll().subscribe({
-      next: data => this.categories = data,
-      error: () => this.snackBar.open('Failed to load categories', 'Close', { duration: 3000 })
-    });
-  }
-
-  add() {
-    if (!this.newInstruks.title?.trim()) return;
-
-    this.service.create(this.newInstruks).subscribe({
-      next: () => {
-        this.snackBar.open('Instruks created', 'Close', { duration: 2000 });
-        this.newInstruks = { title: '', description: '', content: '', categoryId: '' };
-        this.loadInstruks();
-      },
-      error: () => this.snackBar.open('Failed to create instruks', 'Close', { duration: 3000 })
-    });
-  }
-
-  edit(instruks: Instruks) {
-    this.editingInstruks = { ...instruks };
-  }
-
-  saveEdit() {
-    if (!this.editingInstruks) return;
-
-    this.service.update(this.editingInstruks.id, this.editingInstruks).subscribe({
-      next: () => {
-        this.snackBar.open('Instruks updated', 'Close', { duration: 2000 });
-        this.editingInstruks = null;
-        this.loadInstruks();
-      },
-      error: () => this.snackBar.open('Update failed', 'Close', { duration: 3000 })
-    });
-  }
-
-  cancelEdit() {
-    this.editingInstruks = null;
-  }
-
-  delete(instruks: Instruks) {
-    if (!confirm(`Delete "${instruks.title}"?`)) return;
-
-    this.service.delete(instruks.id).subscribe({
-      next: () => {
-        this.snackBar.open('Instruks deleted', 'Close', { duration: 2000 });
-        this.loadInstruks();
-      },
-      error: () => this.snackBar.open('Delete failed', 'Close', { duration: 3000 })
-    });
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
@@ -18,16 +19,23 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
+import { CategoryFormComponent } from './category-form/category-form.component';
+import { InstruksFormComponent } from './instruks-form/instruks-form.component';
+import { InstruksByCategoryComponent } from './instruks-by-category/instruks-by-category.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     CategoryListComponent,
     InstruksListComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CategoryFormComponent,
+    InstruksFormComponent,
+    InstruksByCategoryComponent
   ],
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

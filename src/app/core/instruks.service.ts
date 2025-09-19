@@ -1,13 +1,12 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Instruks } from './models/instruks.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class InstruksService {
-  private baseUrl = 'http://localhost:5000/api/instruks'; // adjust if needed
+  private readonly baseUrl = `${environment.apiBase}/instruks`; // backend route already plural
 
   constructor(private http: HttpClient) {}
 
@@ -15,19 +14,23 @@ export class InstruksService {
     return this.http.get<Instruks[]>(this.baseUrl);
   }
 
-  get(id: string): Observable<Instruks> {
+  getById(id: string): Observable<Instruks> {                    // <-- string
     return this.http.get<Instruks>(`${this.baseUrl}/${id}`);
   }
 
-  create(instruks: Partial<Instruks>): Observable<Instruks> {
-    return this.http.post<Instruks>(this.baseUrl, instruks);
+  getByCategory(categoryId: string): Observable<Instruks[]> {    // <-- string
+    return this.http.get<Instruks[]>(`${this.baseUrl}?categoryId=${encodeURIComponent(categoryId)}`);
   }
 
-  update(id: string, instruks: Partial<Instruks>): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${id}`, instruks);
+  create(dto: Partial<Instruks>): Observable<void> {
+    return this.http.post<void>(this.baseUrl, dto);
   }
 
-  delete(id: string): Observable<void> {
+  update(id: string, dto: Partial<Instruks>): Observable<void> { // <-- string
+    return this.http.put<void>(`${this.baseUrl}/${id}`, dto);
+  }
+
+  delete(id: string): Observable<void> {                         // <-- string
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

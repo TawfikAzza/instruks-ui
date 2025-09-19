@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Category } from './models/category.model'; // adjust if needed
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+export interface Category {
+  id: string;  // GUID
+  name: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private baseUrl = 'http://localhost:5000/api/category';
+  private readonly baseUrl = `${environment.apiBase}/category`; // your backend route
 
   constructor(private http: HttpClient) {}
 
@@ -15,15 +18,19 @@ export class CategoryService {
     return this.http.get<Category[]>(this.baseUrl);
   }
 
-  create(name: string): Observable<Category> {
-    return this.http.post<Category>(this.baseUrl, { name });
+  getById(id: string): Observable<Category> {        // <-- string
+    return this.http.get<Category>(`${this.baseUrl}/${id}`);
   }
 
-  update(id: number, name: string): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${id}`, { id, name });
+  create(name: string): Observable<void> {
+    return this.http.post<void>(this.baseUrl, { name });
   }
 
-  delete(id: number): Observable<void> {
+  update(id: string, name: string): Observable<void> { // <-- string
+    return this.http.put<void>(`${this.baseUrl}/${id}`, { name });
+  }
+
+  delete(id: string): Observable<void> {               // <-- string
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

@@ -1,8 +1,8 @@
 ﻿export interface Category {
-  id: number;
+  id: string;
   name: string;
 }
 export interface CategoryDto {
-  id: number;
+  id: string;
   name: string;
 }

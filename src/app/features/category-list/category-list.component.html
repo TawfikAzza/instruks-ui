@@ -1,10 +1,9 @@
 <mat-card>
   <mat-card-title>Categories</mat-card-title>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" [routerLink]="['/categories/new']">Add Category</button>
+  </mat-card-actions>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>New Category</mat-label>
-    <input matInput [(ngModel)]="newCategoryName" />
-  </mat-form-field>
 
   <button mat-raised-button color="primary" (click)="add()">Add</button>
 
@@ -34,8 +33,12 @@
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let c">
         <ng-container *ngIf="!editingCategory || editingCategory.id !== c.id">
-          <button mat-icon-button color="primary" (click)="edit(c)">
+          <button mat-icon-button color="primary" [routerLink]="['/categories', c.id, 'edit']" matTooltip="Edit">
             <mat-icon>edit</mat-icon>
+          </button>
+
+          <button mat-icon-button [routerLink]="['/categories', c.id, 'instruks']" matTooltip="View Instruks">
+            <mat-icon>list</mat-icon>
           </button>
           <button mat-icon-button color="warn" (click)="delete(c)">
             <mat-icon>delete</mat-icon>
